@@ -1,0 +1,206 @@
+🛠️ MANUAL GPT — RESUMIR UN PDF DE RAPEALO (Versión Profesional)
+🧩 CONTEXTO
+Este flujo está basado en la infraestructura de RAPEALO:
+
+Archivos organizados en Dropbox (navegación vía API)
+
+Índices de referencia como Indice_RAPEALO.xlsx y dropbox archivos.txt
+
+PDFs con contenido sobre Hip Hop para ser usados como insumo para piezas culturales
+
+✅ PASO 1 – LOCALIZACIÓN DEL PDF
+Comando:
+json
+Copiar
+Editar
+{
+  "path": "/GPT"
+}
+Usar listarCarpeta de content_dropboxapi_com__jit_plugin para ubicar el archivo deseado.
+
+Criterio:
+Identificar visualmente la ruta del archivo (por ejemplo, /GPT/pdf001-librosHipHop parte 1.pdf) con ayuda de dropbox archivos.txt.
+
+✅ PASO 2 – DESCARGA DEL PDF
+Comando:
+json
+Copiar
+Editar
+{
+  "path": "/GPT/pdf001-librosHipHop parte 1.pdf"
+}
+Llamar a descargarArchivo desde la misma API. Esto recupera el archivo binario completo en entorno protegido.
+
+✅ PASO 3 – LECTURA DEL CONTENIDO
+Proceso:
+Utilizar herramienta interna o librería Python como PyMuPDF (fitz) o pdfplumber para abrir y extraer texto.
+
+Leer únicamente las primeras 5–10 páginas para un resumen inicial.
+
+Extraer texto limpio, evitando encabezados, números de página, notas editoriales, márgenes.
+
+✅ PASO 4 – ANÁLISIS DE CONTENIDO
+Puntos clave:
+Identificar tema central, tono, estructura narrativa y estilo de redacción.
+
+Clasificar el contenido según categorías RAPEALO: historia, crítica cultural, elementos del Hip Hop, biografía, filosofía.
+
+Resumir en bloques temáticos de 3 a 5 ideas clave.
+
+✅ PASO 5 – REDACCIÓN DEL RESUMEN
+Estilo:
+Narrativo, directo, respetuoso del autor original.
+
+Evitar adornos, palabras abstractas o exageraciones.
+
+No utilizar academicismo vacío ni lenguaje técnico innecesario.
+
+Estructura recomendada:
+markdown
+Copiar
+Editar
+### 🧠 Resumen: [Título del documento]
+
+[Introducción general de 2 líneas]
+
+🔹 [Bloque temático 1]  
+[Resumen de idea o fragmento]
+
+🔹 [Bloque temático 2]  
+[Resumen de idea o fragmento]
+
+[Conclusión breve o llamado]
+✅ PARÁMETROS DE CALIDAD
+Máximo 600 palabras
+
+Claridad > Complejidad
+
+Fidelidad total al texto original
+
+Enfoque Hip Hop cultural (no musical/comercial)
+
+🧠 GLOSARIO DE COMANDOS
+Acción	API o función	Comentario
+Listar archivos carpeta	listarCarpeta	path: carpeta
+Descargar PDF	descargarArchivo	path: archivo
+Leer PDF en código	Python (fitz, pdfplumber)	para texto
+Filtrar en Excel	pandas con str.contains()	busca "libro"
+Extraer columnas clave	df[['col1', 'col2']]	título y fuente
+
+🏁 EJEMPLO COMPLETO EN CÓDIGO
+python
+Copiar
+Editar
+import pandas as pd
+import fitz  # PyMuPDF
+
+# Leer índice
+df = pd.read_excel("Indice_RAPEALO.xlsx")
+libros = df[df.apply(lambda row: row.astype(str).str.contains("libro", case=False).any(), axis=1)]
+
+# Obtener archivo fuente
+archivo = libros.iloc[0]['archivo_fuente']
+
+# Abrir PDF
+doc = fitz.open(f"/ruta/{archivo}")
+texto = ""
+for page in doc[:5]:
+    texto += page.get_text()
+
+# Procesar texto en bloques
+bloques = texto.split("\n\n")[:4]  # Simplificado
+
+📁 /GPT
+  ├── 📄 Base_de_conocimiento.xlsx
+  ├── 📄 Base__de_conocimiento.json
+  ├── 📄 RAPEALO 2025 Escuela.docx
+  ├── 📄 pdf001-librosHipHop parte 1.pdf
+  ├── 📄 pdf001-librosHipHop parte 2.pdf
+  ├── 📄 pdf002 - educación y cultura.pdf
+  ├── 📄 pdf003 - baile y danza Hip Hop.pdf
+  ├── 📄 pdf004 - Critical_Hip_Hop_and_Multicultural.pdf
+  ├── 📄 pdf005 - Different_Hip_hop_Dance styles.pdf
+  ├── 📄 pdf006 - Thirty_Years_of_Rapsploitation_Hip_Hop.pdf
+  ├── 📄 pdf007 - Re_Imagining_Teaching_and_Learning.pdf
+  ├── 📄 pdf008 - Investigaciones de rapealo.pdf
+  ├── 📄 pdf009 - Artículos de Habla Hispana.pdf
+  └── 📄 Instructivo 2.2.txt
+
+📁 /Documentos y Archivos/2025 enero
+  ├── 📄 Las_plataformas_de_streaming_musical_y_s.pdf
+  ├── 📄 storm - The Breakdance History.pdf
+  ├── 📄 storm Popping dance history.pdf
+  ├── 📄 storm language and slang of the Hip Hop culture history.pdf
+  ├── 📄 academia Juventud_y_Comunicacion_Apropiacion_de_m.pdf
+  ├── 📄 academia Raperos_2_0_Economia_alternativa_y_redes.pdf
+  └── 📄 acasdemia EL_HIP_HOP_COMO_HERRAMIENTA_DE_TRANSFORM.pdf
+
+📁 /Documentos y Archivos/2025 febrero
+  ├── 📄 Innovaciones_en_La_Rima_Poesia_y_Rap.pdf
+  ├── 📄 Escritura_freestyle_usos_y_sentidos_de_l.pdf
+  ├── 📄 Batallas_de_rap_y_retorica_Figuras_fonol.pdf
+  ├── 📄 Leer_escuchar_y_escribir_rap_en_la_forma.pdf
+  ├── 📄 Conseguite_un_trabajo_honesto_Notas_sob.pdf
+  ├── 📄 Apuntes_sobre_la_historia_y_desarrollo_d.pdf
+  ├── 📄 Aqui_en_el_Ghetto_Hip_hop_in_Colombia_Cu.pdf
+  ├── 📄 CULTURA_HIP_HOP_Y_RAP_ESPANOL_UNA_APROXI (1).pdf
+  ├── 📄 El_hip_hop_como_un_modo_de_sentir_la_ciu.pdf
+  ├── 📄 Estilo_libre_La_practica_del_rap_freesty.pdf
+  ├── 📄 RIMAS_EN_EL_MOMENTO_ANALISIS_ETNOGRAFICO.pdf
+  ├── 📄 Hibridacion_cultural_en_el_hip_hop_como.pdf
+  ├── 📄 Rap_en_Accion_en_Cultura_en_los_margenes.pdf
+  ├── 📄 Reading_Billboard_1979_89_Exploring_Rap.pdf
+  ├── 📄 Community_Service_Partnerships_African_A.pdf
+  ├── 📄 Up_From_hustling_Power_plantations_and_t.pdf
+  ├── 📄 pabon-physical-graffiti-18-26.pdf
+  ├── 📄 Dialnet-MemoriaYHipHopUnaMetaforaDeOrigen-9081865.pdf
+  ├── 📄 Hip_Hop_Culture_History_and_Trajectory.pdf
+  └── 📄 The_World_IS_Yours_A_Brief_History_of_Hi.pdf
+
+📁 /Documentos y Archivos/Docs complementarios/Lote 1 junio
+  ├── 📄 EL_EXITO_DE_CUSTOMIZARSE_La_creacion_de.pdf
+  ├── 📄 ESTETICA_DIGITAL_Sintopia_del_arte_la_ci.pdf
+  ├── 📄 El_arte_contemporaneo_electronico_y_digi.pdf
+  ├── 📄 Arte_contemporaneo_e_innovacion_tecnolog.pdf
+  ├── 📄 De_lo_virtual_y_lo_real_apuntes_para_una.pdf
+  ├── 📄 Estratos_y_categorias_esteticas_del_arte.pdf
+  ├── 📄 Construccion_de_la_identidad_a_traves_de.pdf
+  ├── 📄 Psicologia_de_la_creatividad_Jovenes_tra.pdf
+  └── 📄 (más archivos en la carpeta...)
+
+📁 /Documentos y Archivos/Producción/junio 2025
+  ├── 📄 Geracao_Boom_Bap_Sampling_e_Producao_Mus.pdf
+  ├── 📄 Controllers_as_Musical_Instruments_Contr.pdf
+  ├── 📄 Global_Hip_Hop_Studies_Bibliography.pdf
+  ├── 📄 Accion_Socioeducativa_del_Hip_Hop_Exper.pdf
+  ├── 📄 Geometric_optical_knot_in_3_1_dimensiona.pdf
+  ├── 📄 Cool_Edit_Pro_y_el_boom_del_Hip_Hop_en_Q.pdf
+  └── 📄 Music_Technology_and_the_Hip_Hop_Beat_Ma.pdf
+
+📁 /Documentos y Archivos/Noviembre 24
+  ├── 📁 Can_It_Be_Bigger_Than_Hip_Hop_From_Globa
+      ├── 📄 Can_It_Be_Bigger_Than_Hip_Hop_From_Globa.pdf
+      ├── 📄 Academia Summary.pdf
+      └── 📁 more_papers_by_travis_harris
+          ├── 📄 Anthropology_is_in_Trouble.pdf
+          ├── 📄 Da_Blood_of_Shesus.pdf
+          ├── 📄 Global_Hip_Hop_Studies_Bibliography.pdf
+          ├── 📄 I_Speak_Hip_Hop.pdf
+          ├── 📄 Refocusing_Hip_Hop.pdf
+          ├── 📄 Alive_Reflective.pdf
+          ├── 📄 If_I_Ruled_the_World.pdf
+          ├── 📄 Introduction_Aint_It_Evil.pdf
+          ├── 📄 Journal_of_Hip_Hop_Studies.pdf
+          └── 📄 Putin_On_For_Da_Lou.pdf
+  ├── 📁 Hip_Hop_Development_within_Hip_Hop_Praxi
+      ├── 📄 Hip_Hop_Development_within_Hip_Hop_Praxi FULL PACK-comprimido.pdf
+      ├── 📄 todo Hip Hop articulos.xlsx
+  ├── 📁 Extreme_Kinematics_in_Selected_Hip_Hop_D
+      ├── 📄 Extreme_Kinematics_in_Selected_Hip_Hop_D FULL PACK.pdf
+  ├── 📁 Hip_Hop_Dance_Experience_Linked_to_Socio
+      ├── 📄 Hip_Hop_Dance_Experience_Linked_to_Socio FULL PACK.pdf
+  ├── 📁 Getting_Hip_to_the_Hop_A_Rap_Bibliograph
+      ├── 📄 Getting_Hip_to_the_Hop_A_Rap_Bibliograph FULL PACK_compressed.pdf
+  ├── 📁 Religion_and_Hip_Hop
+      ├── 📄 Religion_and_Hip_Hop.pdf
+      └── 📁 more_papers_by_travis_harris
